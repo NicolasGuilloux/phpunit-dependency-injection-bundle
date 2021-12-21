@@ -10,7 +10,7 @@ use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 
 class Configuration extends AbstractConfiguration
 {
-    public const CONFIG_NODE = 'rich_id_phpunit_dependency-injection';
+    public const CONFIG_NODE = 'phpunit_dependency_injection';
 
     protected function buildConfiguration(ArrayNodeDefinition $rootNode): void
     {
