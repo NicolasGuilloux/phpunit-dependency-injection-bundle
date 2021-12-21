@@ -8,5 +8,4 @@ use RichCongress\BundleToolbox\Configuration\AbstractBundle;
 
 class PhpunitDependencyInjectionBundle extends AbstractBundle
 {
-    public const COMPILER_PASSES = [];
 }

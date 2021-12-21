@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace NicolasGuilloux\PhpunitDependencyInjectionBundle\DependencyInjection;
 
+use NicolasGuilloux\PhpunitDependencyInjectionBundle\DependencyInjection\CompilerPass\DefinitionRegistryCompilerPass;
+use PHPUnit\Framework\Test;
 use RichCongress\BundleToolbox\Configuration\AbstractExtension;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -27,5 +29,7 @@ class PhpunitDependencyInjectionExtension extends AbstractExtension
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources'));
         $loader->load('services.xml');
+
+        $container->registerForAutoconfiguration(Test::class)->addTag(DefinitionRegistryCompilerPass::TAG);
     }
 }

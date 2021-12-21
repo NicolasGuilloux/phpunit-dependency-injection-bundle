@@ -1,0 +1,20 @@
+== Explanations
+
+In this document, the approach used to inject the dependencies. This is meant to explain the philosophy behind this bundle, how it does the magic, and why I did it this way instead of another one. The goal is also to give tools to the community to improve or discuss how the feature was made.
+
+=== Features
+
+This bundles aims to solve 2 features that I would like to have when I write tests:
+
+* Having the services injected in the test case using the Symfony style
+* Avoid the private services to be removed from the test container during its optimisation
+
+Both features are addressed by telling Symfony that the services will be used by the TestCase and therefore, autowired and not removed.
+
+=== Implementation
+
+The goal is to let Symfony resolve the dependency injection, recover the result, and apply it in the `setUp` method before any operation. This should be future-proof, since Symfony resolves everything without any action from the bundle, we just use the result. The services should be injected on every test to prevent side effect as well, and also because the container is removed between tests.
+
+This also prevents Symfony from removing the private services during its optimisation. If a private service is currently under development and therefore use nowhere except in tests, Symfony will remove it from the container to gain speed and space. This is something very handy for obvious reason, but can be a pain when writing a test especially if you do it the TDD way.
+
+Declaring all tests case as a public service will let Symfony autowire everything and prevent the optimization from removing services. The definition will be recovered and used to inject the services in every `setUp` iteration. Both features are solved this way, as long as we don't use them directly. We may be able to remove them using a very late CompilerPass for instance.

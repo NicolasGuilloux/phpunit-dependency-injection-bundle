@@ -6,6 +6,15 @@
 
     <services>
         <defaults autowire="true" autoconfigure="true" public="false"/>
-        <!-- Your Symfony Services -->
+
+        <service id="NicolasGuilloux\PhpunitDependencyInjectionBundle\DefinitionRegistry\DefinitionRegistryInterface"
+                 alias="NicolasGuilloux\PhpunitDependencyInjectionBundle\DefinitionRegistry\DefinitionRegistry"
+                 public="true"
+        />
+
+        <service id="NicolasGuilloux\PhpunitDependencyInjectionBundle\DefinitionRegistry\DefinitionRegistry"
+                 class="NicolasGuilloux\PhpunitDependencyInjectionBundle\DefinitionRegistry\DefinitionRegistry"
+                 public="true"
+        />
     </services>
 </container>

@@ -38,12 +38,4 @@
             </exclude>
         </whitelist>
     </filter>
-
-    <extensions>
-        <extension class="RichCongress\TestFramework\PHPUnitExtension">
-            <arguments>
-                <string>RichCongress\WebTestBundle\TestHook</string>
-            </arguments>
-        </extension>
-    </extensions>
 </phpunit>

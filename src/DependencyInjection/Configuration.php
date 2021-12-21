@@ -12,14 +12,8 @@ class Configuration extends AbstractConfiguration
 {
     public const CONFIG_NODE = 'phpunit_dependency_injection';
 
-    protected function buildConfiguration(ArrayNodeDefinition $rootNode): void
+    protected function buildConfig(NodeBuilder $nodeBuilder): void
     {
-        $children = $rootNode->children();
-        $this->addConfig($children);
-    }
-
-    protected function addConfig(NodeBuilder $nodeBuilder): void
-    {
-        // Do something
+        $nodeBuilder->scalarNode('tests_namespace');
     }
 }
