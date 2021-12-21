@@ -1,8 +1,7 @@
 version: '3.7'
 services:
     application:
-        container_name: template-bundle_app
-        image: richcongress/php:7.3
+        image: richcongress/php:7.3-fpm
         volumes:
             - .:/app:rw,cached
             - ~/.composer:/home/application/.composer:cached

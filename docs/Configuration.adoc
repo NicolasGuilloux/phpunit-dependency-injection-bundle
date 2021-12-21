@@ -4,5 +4,5 @@ Here is a sample of configuration:
 
 [source,yaml]
 ----
-rich_id_template:
+rich_id_phpunit_dependency-injection:
 ----

@@ -1,19 +1,19 @@
 {
-    "name": "rich-id/template-bundle",
+    "name": "nicolasguilloux/phpunit-dependency-injection-bundle",
     "description": "A magic bundle",
     "type": "symfony-bundle",
     "license": "MIT",
     "authors": [
         {
-            "name": "RichId",
-            "homepage": "https://www.rich-id.com"
+            "name": "NicolasGuilloux",
+            "homepage": "https://nicolasguilloux.eu"
         }
     ],
     "support": {
-        "email": "contact@rich-id.com",
-        "source": "https://github.com/rich-id/template-bundle",
-        "docs": "https://github.com/rich-id/template-bundle/blob/master/README.md",
-        "issues": "https://github.com/rich-id/template-bundle/issues"
+        "email": "nicolas.guilloux@protonmail.com",
+        "source": "https://github.com/nicolasguilloux/phpunit-dependency-injection-bundle",
+        "docs": "https://github.com/nicolasguilloux/phpunit-dependency-injection-bundle/blob/master/README.md",
+        "issues": "https://github.com/nicolasguilloux/phpunit-dependency-injection-bundle/issues"
     },
     "require": {
         "php": ">=7.3",
@@ -28,12 +28,12 @@
     },
     "autoload": {
         "psr-4": {
-            "RichId\\TemplateBundle\\": "src/"
+            "NicolasGuilloux\\PhpunitDependencyInjectionBundle\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "RichId\\TemplateBundle\\Tests\\": "tests/"
+            "NicolasGuilloux\\PhpunitDependencyInjectionBundle\\Tests\\": "tests/"
         }
     },
     "config": {

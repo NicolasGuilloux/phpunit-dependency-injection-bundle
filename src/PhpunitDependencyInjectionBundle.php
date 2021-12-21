@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace RichId\TemplateBundle;
+namespace NicolasGuilloux\PhpunitDependencyInjectionBundle;
 
 use RichCongress\BundleToolbox\Configuration\AbstractBundle;
 
-class RichIdTemplateBundle extends AbstractBundle
+class PhpunitDependencyInjectionBundle extends AbstractBundle
 {
     public const COMPILER_PASSES = [];
 }

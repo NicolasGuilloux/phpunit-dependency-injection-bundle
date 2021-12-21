@@ -2,29 +2,24 @@
 
 declare(strict_types=1);
 
-namespace RichId\TemplateBundle\Tests;
+namespace NicolasGuilloux\PhpunitDependencyInjectionBundle\Tests;
 
+use NicolasGuilloux\PhpunitDependencyInjectionBundle\DependencyInjection\Configuration;
+use NicolasGuilloux\PhpunitDependencyInjectionBundle\PhpunitDependencyInjectionBundle;
 use RichCongress\TestFramework\TestConfiguration\Annotation\TestConfig;
 use RichCongress\TestSuite\TestCase\TestCase;
-use RichId\TemplateBundle\DependencyInjection\Configuration;
-use RichId\TemplateBundle\RichIdTemplateBundle;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 /**
- * Class DummyTest.
- *
- * @author    Nicolas Guilloux <nguilloux@rich-id.com>
- * @copyright 2014 - 2020 RichId (https://www.rich-id.com)
- *
- * @covers \RichId\TemplateBundle\RichIdTemplateBundle
+ * @covers \NicolasGuilloux\PhpunitDependencyInjectionBundle\PhpunitDependencyInjectionBundle
  */
 class DummyTest extends TestCase
 {
     public function testInstantiateBundle(): void
     {
-        $bundle = new RichIdTemplateBundle();
+        $bundle = new PhpunitDependencyInjectionBundle();
 
-        self::assertInstanceOf(RichIdTemplateBundle::class, $bundle);
+        self::assertInstanceOf(PhpunitDependencyInjectionBundle::class, $bundle);
     }
 
     /** @TestConfig("container") */
