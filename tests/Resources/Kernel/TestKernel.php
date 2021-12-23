@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace NicolasGuilloux\PhpunitDependencyInjectionBundle\Tests\Resources\Kernel;
 
+use RichId\AutoconfigureBundle\RichIdAutoconfigureBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\MonologBundle\MonologBundle;
 use NicolasGuilloux\PhpunitDependencyInjectionBundle\PhpunitDependencyInjectionBundle;
@@ -22,7 +23,7 @@ class TestKernel extends Kernel
     /** @return string[] */
     public function registerBundles(): iterable
     {
-        $bundles = [FrameworkBundle::class, PhpunitDependencyInjectionBundle::class];
+        $bundles = [FrameworkBundle::class, RichIdAutoconfigureBundle::class,  PhpunitDependencyInjectionBundle::class];
 
         foreach ($bundles as $bundle) {
             yield new $bundle();

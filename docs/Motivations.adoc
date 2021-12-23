@@ -18,3 +18,9 @@ The goal is to let Symfony resolve the dependency injection, recover the result,
 This also prevents Symfony from removing the private services during its optimisation. If a private service is currently under development and therefore use nowhere except in tests, Symfony will remove it from the container to gain speed and space. This is something very handy for obvious reason, but can be a pain when writing a test especially if you do it the TDD way.
 
 Declaring all tests case as a public service will let Symfony autowire everything and prevent the optimization from removing services. The definition will be recovered and used to inject the services in every `setUp` iteration. Both features are solved this way, as long as we don't use them directly. We may be able to remove them using a very late CompilerPass for instance.
+
+So, if we summarize, this bundle does the following actions in order:
+
+1. Register all tests as synthetic autowired and autoconfigured services
+2. Recover all definitions after the Container optimizations, and injects the in the `DefinitionRegistry` service
+3. The `AutowiringTestTrait` implements a method `autowire` that execute all methods and bind all properties to the current test case based on its definition

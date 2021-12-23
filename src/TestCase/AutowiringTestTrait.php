@@ -8,9 +8,6 @@ use Symfony\Component\DependencyInjection\Reference;
 
 trait AutowiringTestTrait
 {
-    /** @var ContainerInterface */
-    private $autowiringContainer;
-
     protected function autowire(ContainerInterface $container): void
     {
         /** @var DefinitionRegistryInterface $definitionRegistry */
@@ -21,34 +18,37 @@ trait AutowiringTestTrait
             return;
         }
 
-        $this->autowiringContainer = $container;
-        $this->resolveMethods($definition->getMethodCalls());
-        $this->resolveProperties($definition->getProperties());
+        $this->resolveMethods($container, $definition->getMethodCalls());
+        $this->resolveProperties($container, $definition->getProperties());
     }
 
-    private function resolveMethods(array $methodCalls): void
+    private function resolveMethods(ContainerInterface $container, array $methodCalls): void
     {
         foreach ($methodCalls as $methodCall) {
             [$method, $arguments] = $methodCall;
             $callback = [$this, $method];
-            $arguments = array_map([$this, 'resolveValue'], $arguments);
+            $arguments = array_map(
+                function ($argument) use ($container) {
+                    return $this->resolveValue($container, $argument);
+                },
+                $arguments
+            );
 
             $callback(...$arguments);
         }
     }
 
-    private function resolveProperties(array $properties): void
+    private function resolveProperties(ContainerInterface $container, array $properties): void
     {
         foreach ($properties as $key => $value) {
-            $this->$key = $this->resolveValue($value);
+            $this->$key = $this->resolveValue($container, $value);
         }
     }
 
-    private function resolveValue($argument)
+    private function resolveValue(ContainerInterface $container, $argument)
     {
         if ($argument instanceof Reference) {
-            $serviceId = (string) $argument;
-            return $this->autowiringContainer->get($serviceId);
+            return $container->get((string) $argument);
         }
 
         return $argument;

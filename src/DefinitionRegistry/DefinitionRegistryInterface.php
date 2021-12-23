@@ -6,6 +6,6 @@ use Symfony\Component\DependencyInjection\Definition;
 
 interface DefinitionRegistryInterface
 {
-    public function has(string $serviceId): bool;
-    public function get(string $serviceId): ?Definition;
+    public function has(string $class): bool;
+    public function get(string $class): ?Definition;
 }

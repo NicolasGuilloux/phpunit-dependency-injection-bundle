@@ -2,37 +2,32 @@
 
 namespace NicolasGuilloux\PhpunitDependencyInjectionBundle\DefinitionRegistry;
 
-use NicolasGuilloux\PhpunitDependencyInjectionBundle\Model\DefinitionExtraction;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
 class DefinitionRegistry implements DefinitionRegistryInterface
 {
-    /** @var array<string, DefinitionExtraction> */
+    public const SERIALIZATION_ALLOWED_CLASSES = [Definition::class, Reference::class];
+
+    /** @var array<string, Definition> */
     protected $definitions = [];
 
     public function setDefinitions(array $serializedDefinitions): void
     {
-        foreach ($serializedDefinitions as $serviceId => $serializedDefinition) {
-            $this->definitions[$serviceId] = unserialize(
-                $serializedDefinition,
-                [
-                    'allowed_classes' => [
-                        Definition::class,
-                        Reference::class,
-                    ]
-                ]
-            );
+        $options = ['allowed_classes' => self::SERIALIZATION_ALLOWED_CLASSES];
+
+        foreach ($serializedDefinitions as $class => $serializedDefinition) {
+            $this->definitions[$class] = unserialize($serializedDefinition, $options);
         }
     }
 
-    public function has(string $serviceId): bool
+    public function has(string $class): bool
     {
-        return array_key_exists($serviceId, $this->definitions);
+        return array_key_exists($class, $this->definitions);
     }
 
-    public function get(string $serviceId): ?Definition
+    public function get(string $class): ?Definition
     {
-        return $this->definitions[$serviceId] ?? null;
+        return $this->definitions[$class] ?? null;
     }
 }

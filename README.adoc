@@ -26,13 +26,57 @@ toc::[]
 
 == Installation
 
-This version of the bundle requires Symfony 4.4+ and PHP 7.3+.
+Execute the composer command to install the bundle:
 
 [source,bash]
 ----
-composer require nicolasguilloux/phpunit-dependency-injection-bundle
+composer require nicolasguilloux/phpunit-dependency-injection-bundle --dev
 ----
 
+Now add the configuration for the test environment and change it to your needs:
+
+[source,yaml]
+----
+phpunit_dependency_injection:
+    tests_namespace: 'App\Tests'
+----
+
+Now, it is just a matter of implementing the trait in the corresponding test in the `setUp` method.
+
+Warning: Note that the class is still a TestCase, so you won't be able to use the constructor to inject dependencies. This is where the `Required` annotation/attribute becomes handy. Checkout the link:https://symfony.com/doc/current/service_container/calls.html[Symfony's documentation^].
+
+[source,php]
+----
+use NicolasGuilloux\PhpunitDependencyInjectionBundle\TestCase\AutowiringTestTrait;
+use Psr\Log\LoggerInterface;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Contracts\Service\Attribute\Required;
+
+final class RandomTest extends KernelTestCase
+{
+    use AutowiringTestTrait;
+
+    #[Required]
+    public LoggerInterface $logger;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        self::bootKernel();
+        $this->autowire(self::getContainer());
+    }
+
+    public function testSomething(): void
+    {
+        self::assertInstanceOf(LoggerInterface::class, $this->logger);
+    }
+}
+----
+
+== Motivations
+
+Checkout the link:./docs/Motivations.adoc[Motivations article].
 
 == Documentation
 

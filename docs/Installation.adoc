@@ -1,0 +1,47 @@
+== Installation
+
+Execute the composer command to install the bundle:
+
+[source,bash]
+----
+composer require nicolasguilloux/phpunit-dependency-injection-bundle --dev
+----
+
+Now add the configuration for the test environment and change it to your needs:
+
+[source,yaml]
+----
+phpunit_dependency_injection:
+    tests_namespace: 'App\Tests'
+----
+
+Now, it is just a matter of implementing the trait in the corresponding test in the `setUp` method.
+
+[source,php]
+----
+use NicolasGuilloux\PhpunitDependencyInjectionBundle\TestCase\AutowiringTestTrait;
+use Psr\Log\LoggerInterface;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Contracts\Service\Attribute\Required;
+
+final class RandomTest extends KernelTestCase
+{
+    use AutowiringTestTrait;
+
+    #[Required]
+    public LoggerInterface $logger;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        self::bootKernel();
+        $this->autowire(self::getContainer());
+    }
+
+    public function testSomething(): void
+    {
+        self::assertInstanceOf(LoggerInterface::class, $this->logger);
+    }
+}
+----
