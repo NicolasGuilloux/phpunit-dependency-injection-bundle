@@ -3,18 +3,15 @@
 namespace NicolasGuilloux\PhpunitDependencyInjectionBundle\DefinitionRegistry;
 
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Reference;
 
 class DefinitionRegistry implements DefinitionRegistryInterface
 {
-    public const SERIALIZATION_ALLOWED_CLASSES = [Definition::class, Reference::class];
-
     /** @var array<string, Definition> */
     protected $definitions = [];
 
     public function setDefinitions(array $serializedDefinitions): void
     {
-        $options = ['allowed_classes' => self::SERIALIZATION_ALLOWED_CLASSES];
+        $options = ['allowed_classes' => true];
 
         foreach ($serializedDefinitions as $class => $serializedDefinition) {
             $this->definitions[$class] = unserialize($serializedDefinition, $options);
