@@ -34,11 +34,11 @@ jobs:
 
             - name: Execute the tests 🔧
               run: |
-                  php ./vendor/phpunit/phpunit/phpunit --configuration phpunit.xml.dist --colors=never --coverage-text --log-junit reports/junit.xml --coverage-html reports/coverage --coverage-clover build/logs/clover.xml
+                  php ./vendor/phpunit/phpunit/phpunit --configuration phpunit.xml.dist --colors=never --coverage-text --log-junit reports/junit.xml --coverage-html reports/coverage --coverage-clover reports/clover.xml
 
-            - name: Upload results to Coveralls 🚀
-              env:
-                  COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_SECRET }}
-              run: |
-                  composer global require php-coveralls/php-coveralls --prefer-dist --no-interaction --no-progress
-                  COVERALLS_REPO_TOKEN="$COVERALLS_REPO_TOKEN" php-coveralls --coverage_clover=build/logs/clover.xml -v
+            - name: Upload results to Codecov 🚀
+              uses: codecov/codecov-action@v2
+              with:
+                token: ${{ secrets.CODE_COV_TOKEN }}
+                files: ./reports/clover.xml
+                verbose: true
