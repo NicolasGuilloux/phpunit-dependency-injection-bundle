@@ -52,7 +52,9 @@ final class AutowiringTest extends KernelTestCase
         self::assertNull($this->methodLogger);
     }
 
-    /** @requires PHP 8 */
+    /**
+     * @requires PHP >= 8.0.0
+     */
     public function testInjectionWithAttributeForAbovePHP8(): void
     {
         self::assertNull($this->attributeLogger ?? null);
@@ -62,7 +64,9 @@ final class AutowiringTest extends KernelTestCase
         self::assertInstanceOf(LoggerInterface::class, $this->attributeLogger ?? null);
     }
 
-    /** @requires PHP 7 */
+    /**
+     * @requires PHP < 8.0.0
+     */
     public function testInjectionWithAttributeForUnderPHP8(): void
     {
         self::assertNull($this->attributeLogger ?? null);

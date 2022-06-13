@@ -47,7 +47,7 @@ final class DefinitionRegistryTest extends KernelTestCase
         self::assertArrayHasKey('annotationLogger', $properties);
     }
 
-    /** @requires PHP 8 */
+    /** @requires PHP >= 8.0.0 */
     public function testRegistryDeclarationForAttributeWithPHPAbove8(): void
     {
         $definitionRegistry = self::getContainer()->get(DefinitionRegistryInterface::class);
@@ -61,7 +61,7 @@ final class DefinitionRegistryTest extends KernelTestCase
         self::assertArrayHasKey('attributeLogger', $properties);
     }
 
-    /** @requires PHP 7 */
+    /** @requires PHP < 8.0.0 */
     public function testRegistryDeclarationForAttributeWithPHPUnder8(): void
     {
         $definitionRegistry = self::getContainer()->get(DefinitionRegistryInterface::class);

@@ -2,8 +2,12 @@ name: Tests
 on: [push]
 
 jobs:
-    phpunit:
-        runs-on: ubuntu-18.04
+    run:
+        runs-on: ubuntu-latest
+        name: Test against PHP ${{ matrix.php-versions }}
+        strategy:
+          matrix:
+            php-versions: [ '7.4', '8.0', '8.1' ]
         steps:
             - name: Checkout 🛎️
               uses: actions/checkout@v2
@@ -13,7 +17,7 @@ jobs:
             - name: Setup PHP with PECL extension
               uses: shivammathur/setup-php@v2
               with:
-                php-version: '8.1'
+                php-version: ${{ matrix.php-versions }}
                 tools: composer
                 coverage: pcov
 
@@ -26,7 +30,7 @@ jobs:
 
             - name: Install the dependencies 🔧
               run: |
-                  composer install --prefer-dist --no-interaction --no-progress
+                  composer update --prefer-dist --no-interaction --no-progress
 
             - name: Execute the tests 🔧
               run: |

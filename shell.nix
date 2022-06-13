@@ -3,7 +3,7 @@
 pkgs.mkShell {
   buildInputs = with pkgs; [
     # PHP
-    php74
-    php74.packages.composer
+    php81
+    php81.packages.composer
   ];
 }
