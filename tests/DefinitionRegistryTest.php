@@ -14,7 +14,10 @@ use Symfony\Contracts\Service\Attribute\Required;
 final class DefinitionRegistryTest extends KernelTestCase
 {
     #[Required]
-    public LoggerInterface $logger;
+    public LoggerInterface $attributeLogger;
+
+    /** @required */
+    public LoggerInterface $annotationLogger;
 
     /** @required */
     public function autowiringMethod(LoggerInterface $logger): void
@@ -41,6 +44,34 @@ final class DefinitionRegistryTest extends KernelTestCase
         self::assertContains('autowiringMethod', $methodCall);
 
         $properties = $definition->getProperties();
-        self::assertArrayHasKey('logger', $properties);
+        self::assertArrayHasKey('annotationLogger', $properties);
+    }
+
+    /** @requires PHP 8 */
+    public function testRegistryDeclarationForAttributeWithPHPAbove8(): void
+    {
+        $definitionRegistry = self::getContainer()->get(DefinitionRegistryInterface::class);
+        self::assertTrue($definitionRegistry->has(self::class));
+
+        $definition = $definitionRegistry->get(self::class);
+        self::assertInstanceOf(Definition::class, $definition);
+        self::assertSame(self::class, $definition->getClass());
+
+        $properties = $definition->getProperties();
+        self::assertArrayHasKey('attributeLogger', $properties);
+    }
+
+    /** @requires PHP 7 */
+    public function testRegistryDeclarationForAttributeWithPHPUnder8(): void
+    {
+        $definitionRegistry = self::getContainer()->get(DefinitionRegistryInterface::class);
+        self::assertTrue($definitionRegistry->has(self::class));
+
+        $definition = $definitionRegistry->get(self::class);
+        self::assertInstanceOf(Definition::class, $definition);
+        self::assertSame(self::class, $definition->getClass());
+
+        $properties = $definition->getProperties();
+        self::assertArrayNotHasKey('attributeLogger', $properties);
     }
 }

@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace NicolasGuilloux\PhpunitDependencyInjectionBundle\DependencyInjection;
 
 use HaydenPierce\ClassFinder\ClassFinder;
+use NicolasGuilloux\PhpunitDependencyInjectionBundle\DefinitionRegistry\DefinitionRegistryInterface;
 use NicolasGuilloux\PhpunitDependencyInjectionBundle\DependencyInjection\CompilerPass\DefinitionRegistryCompilerPass;
 use PHPUnit\Framework\Test;
-use RichCongress\BundleToolbox\Configuration\AbstractExtension;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
 /**
@@ -18,16 +19,14 @@ use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class PhpunitDependencyInjectionExtension extends AbstractExtension
+class PhpunitDependencyInjectionExtension extends Extension
 {
     /** @param array<string, mixed> $configs */
     public function load(array $configs, ContainerBuilder $container): void
     {
-        $this->parseConfiguration(
-            $container,
-            new Configuration(),
-            $configs
-        );
+        $bundleConfig = $this->processConfiguration(new Configuration(), $configs);
+        $container->setParameter(Configuration::CONFIG_NODE, $bundleConfig);
+        self::bindParameters($container, Configuration::CONFIG_NODE, $bundleConfig);
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources'));
         $loader->load('services.xml');
@@ -72,5 +71,16 @@ class PhpunitDependencyInjectionExtension extends AbstractExtension
                 return is_a($class, Test::class, true);
             }
         );
+    }
+
+    private static function bindParameters(ContainerBuilder $container, string $name, array $config): void
+    {
+        foreach ($config as $key => $parameter) {
+            $container->setParameter($name . '.' . $key, $parameter);
+
+            if (is_array($parameter)) {
+                self::bindParameters($container, $name . '.' . $key, $parameter);
+            }
+        }
     }
 }

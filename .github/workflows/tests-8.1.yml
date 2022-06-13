@@ -1,0 +1,40 @@
+name: Tests
+on: [push]
+
+jobs:
+    phpunit:
+        runs-on: ubuntu-18.04
+        steps:
+            - name: Checkout 🛎️
+              uses: actions/checkout@v2
+              with:
+                  persist-credentials: false
+
+            - name: Setup PHP with PECL extension
+              uses: shivammathur/setup-php@v2
+              with:
+                php-version: '8.1'
+                tools: composer
+                coverage: pcov
+
+            - name: Cache multiple paths
+              uses: actions/cache@v2
+              with:
+                  path: |
+                      **/vendor
+                  key: ${{ runner.os }}-${{ hashFiles('*.lock') }}
+
+            - name: Install the dependencies 🔧
+              run: |
+                  composer install --prefer-dist --no-interaction --no-progress
+
+            - name: Execute the tests 🔧
+              run: |
+                  php ./vendor/phpunit/phpunit/phpunit --configuration phpunit.xml.dist --colors=never --coverage-text --log-junit reports/junit.xml --coverage-html reports/coverage --coverage-clover build/logs/clover.xml
+
+            - name: Upload results to Coveralls 🚀
+              env:
+                  COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_SECRET }}
+              run: |
+                  composer global require php-coveralls/php-coveralls --prefer-dist --no-interaction --no-progress
+                  COVERALLS_REPO_TOKEN="$COVERALLS_REPO_TOKEN" php-coveralls --coverage_clover=build/logs/clover.xml -v
