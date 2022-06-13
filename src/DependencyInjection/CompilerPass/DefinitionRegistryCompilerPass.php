@@ -3,11 +3,11 @@
 namespace NicolasGuilloux\PhpunitDependencyInjectionBundle\DependencyInjection\CompilerPass;
 
 use NicolasGuilloux\PhpunitDependencyInjectionBundle\DefinitionRegistry\DefinitionRegistry;
-use RichCongress\BundleToolbox\Configuration\AbstractCompilerPass;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-final class DefinitionRegistryCompilerPass extends AbstractCompilerPass
+final class DefinitionRegistryCompilerPass implements CompilerPassInterface
 {
     public const TYPE = PassConfig::TYPE_AFTER_REMOVING;
     public const TAG = 'phpunit_test';

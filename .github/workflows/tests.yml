@@ -2,17 +2,24 @@ name: Tests
 on: [push]
 
 jobs:
-    phpunit:
-        runs-on: ubuntu-18.04
+    run:
+        runs-on: ubuntu-latest
+        name: Test against PHP ${{ matrix.php-versions }}
+        strategy:
+          matrix:
+            php-versions: [ '7.4', '8.0', '8.1' ]
         steps:
             - name: Checkout 🛎️
               uses: actions/checkout@v2
               with:
                   persist-credentials: false
 
-            - name: Start docker 🔧
-              run: |
-                  docker-compose -f docker-compose.yml -f .github/docker-compose.yml up -d
+            - name: Setup PHP with PECL extension
+              uses: shivammathur/setup-php@v2
+              with:
+                php-version: ${{ matrix.php-versions }}
+                tools: composer
+                coverage: pcov
 
             - name: Cache multiple paths
               uses: actions/cache@v2
@@ -23,15 +30,15 @@ jobs:
 
             - name: Install the dependencies 🔧
               run: |
-                  docker-compose exec -T application composer install --prefer-dist --no-interaction --no-progress
+                  composer update --prefer-dist --no-interaction --no-progress
 
             - name: Execute the tests 🔧
               run: |
-                  docker-compose exec -T application php -d extension=pcov.so ./vendor/phpunit/phpunit/phpunit --configuration phpunit.xml.dist --colors=never --coverage-text --log-junit reports/junit.xml --coverage-html reports/coverage --coverage-clover build/logs/clover.xml
+                  php ./vendor/phpunit/phpunit/phpunit --configuration phpunit.xml.dist --colors=never --coverage-text --log-junit reports/junit.xml --coverage-html reports/coverage --coverage-clover reports/clover.xml
 
-            - name: Upload results to Coveralls 🚀
-              env:
-                  COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_SECRET }}
-              run: |
-                  docker-compose exec -T application composer global require php-coveralls/php-coveralls --prefer-dist --no-interaction --no-progress
-                  docker-compose exec -T -e COVERALLS_REPO_TOKEN="$COVERALLS_REPO_TOKEN" application /home/application/.composer/vendor/php-coveralls/php-coveralls/bin/php-coveralls --coverage_clover=build/logs/clover.xml -v
+            - name: Upload results to Codecov 🚀
+              uses: codecov/codecov-action@v2
+              with:
+                token: ${{ secrets.CODE_COV_TOKEN }}
+                files: ./reports/clover.xml
+                verbose: true
